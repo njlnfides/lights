@@ -45,7 +45,7 @@
 	d3.csv("https://raw.githubusercontent.com/njlnfides/lights/master/UV-Vis-Lights.csv?token=AQHNK3WCO6M2SU2BE2V3Y527HMJBG", function(data) {
 
 	    // List of groups (here I have one group per column)
-	    var allGroup = [365, 405, 465, 525]
+	    var allGroup = ["valueA", "valueB", "valueC", "valueD"]
 
 	    // add the options to the button
 	    d3.select("#selectButton")
@@ -54,7 +54,7 @@
 	      .enter()
 	    	.append('option')
 	      .text(function (d) { return d; }) // text showed in the menu
-	      .attr("light", function (d) { return d; }) // corresponding value returned by the button
+	      .attr("value", function (d) { return d; }) // corresponding value returned by the button
 
 	    // A color scale: one color for each group
 	    var myColor = d3.scaleOrdinal()
@@ -63,7 +63,7 @@
 
 	    // Add X axis --> it is a date format
 	    var x = d3.scaleLinear()
-	      .domain([370,620])
+	      .domain([100,870])
 	      .range([ 0, width ]);
 	    svg.append("g")
 	      .attr("transform", "translate(0," + height + ")")
@@ -83,9 +83,9 @@
 	        .datum(data)
 	        .attr("d", d3.line()
 	          .x(function(d) { return x(+d.wavelength) })
-	          .y(function(d) { return y(+d.365) })
+	          .y(function(d) { return y(+d.valueA) })
 	        )
-	        .attr("stroke", function(d){ return myColor("365") })
+	        .attr("stroke", function(d){ return myColor("valueA") })
 	        .style("stroke-width", 4)
 	        .style("fill", "none")
 
@@ -93,7 +93,7 @@
 	    function update(selectedGroup) {
 
 	      // Create new data with the selection?
-	      var dataFilter = data.map(function(d){return {wavelength: d.wavelength, light:d[selectedGroup]} })
+	      var dataFilter = data.map(function(d){return {wavelength: d.wavelength, value:d[selectedGroup]} })
 
 	      // Give these new data to update line
 	      line
@@ -102,7 +102,7 @@
 	          .duration(1000)
 	          .attr("d", d3.line()
 	            .x(function(d) { return x(+d.wavelength) })
-	            .y(function(d) { return y(+d.light) })
+	            .y(function(d) { return y(+d.value) })
 	          )
 	          .attr("stroke", function(d){ return myColor(selectedGroup) })
 	    }
@@ -110,7 +110,7 @@
 	    // When the button is changed, run the updateChart function
 	    d3.select("#selectButton").on("change", function(d) {
 	        // recover the option that has been chosen
-	        var selectedOption = d3.select(this).property("light")
+	        var selectedOption = d3.select(this).property("value")
 	        // run the updateChart function with this selected option
 	        update(selectedOption)
 	    })
@@ -119,4 +119,4 @@
 
 
 	</script>
-</html>											
+</html>										
